@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("nRF24L01+ from GoLang)
+	fmt.Println("nRF24L01+ from GoLang")
         uid := os.Getuid()
         if uid != 0 {
             fmt.Println("Must be running as root.")
@@ -16,6 +16,7 @@ func main() {
         } 
 
 	var pipe uint64 = 0x65646f4e32
+	var readPipe uint64 = 0x65646f4e31
 	r := radio.New(22, 0)
 	defer r.Delete()
 	r.Begin()
@@ -26,6 +27,7 @@ func main() {
         r.SetPALevel(radio.PA_LOW)
         r.EnableDynamicPayloads()
         r.OpenWritingPipe(pipe)
+        r.OpenReadingPipe(1, readPipe)
 	//r.OpenReadingPipe(1, pipe)
 	r.StopListening()
 	r.PrintDetails()
@@ -34,6 +36,7 @@ func main() {
 	for {
             resp := r.Write([]byte{0x42, 0x44}, 2)
             fmt.Println(resp) 
-            time.Sleep(1 * time.Second)
+
+            time.Sleep(1000 * time.Millisecond)
 	}
 }
